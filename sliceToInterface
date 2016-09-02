@@ -1,0 +1,16 @@
+func sliceToInterface(list []interface{}) chan []interface{} {
+    n := len(list)
+    out := make(chan []interface{})
+    go func () {
+        for i := 0; i < n; i++ {
+            result := make([]interface{}, n)
+            copy(result, list)
+            if (result[0] > result[n-1]) {
+                result[0], result[n-1] = result[n-1], result[0]
+            }
+            out <- result
+        }
+        close(out)
+    }()
+    return out
+}
