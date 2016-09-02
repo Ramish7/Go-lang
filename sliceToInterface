@@ -14,3 +14,5 @@ func sliceToInterface(list []interface{}) chan []interface{} {
     }()
     return out
 }
+
+// error. invalid operation: result[0] > result[n - 1] (operator > not defined on interface)
