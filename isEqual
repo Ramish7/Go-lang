@@ -1,0 +1,36 @@
+package main
+
+import "fmt"
+
+func isEqual(a, b []int) bool {
+
+    if a == nil && b == nil { 
+        return true; 
+    }
+
+    if a == nil || b == nil { 
+        return false; 
+    }
+
+    if len(a) != len(b) {
+        return false
+    }
+
+    for i := range a {
+        if a[i] != b[i] {
+            return false
+        }
+    }
+
+    return true
+}
+
+func main() {
+    a := []int {4,5,6}
+    b := []int {4,5,6}
+    c := []int {4,5,6,7}
+
+    fmt.Println(isEqual(a, b))
+    fmt.Println(isEqual(a, c))
+
+}
