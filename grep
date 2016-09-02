@@ -4,75 +4,42 @@ package main
 
 import (
     "bufio"
+    "bytes"
     "fmt"
     "log"
     "os"
-    "strings"
-    "sync"
 )
 
 func parse_args() (file, pat string) {
     if len(os.Args) < 3 {
-        log.Fatal("usage: gorep2 <file_name> <pattern>")
+        log.Fatal("usage: petergrep <file_name> <pattern>")
     }
-
     file = os.Args[1]
     pat = os.Args[2]
     return
 }
 
-func readFile(file string, to chan<- string) {
+func grepFile(file string, pat []byte) int64 {
+    patCount := int64(0)
     f, err := os.Open(file)
     if err != nil {
         log.Fatal(err)
     }
     defer f.Close()
-
-    freader := bufio.NewReader(f)
-    for {
-        line, er := freader.ReadBytes('\n')
-        if er == nil {
-            to <- string(line)
-        } else {
-            break
+    scanner := bufio.NewScanner(f)
+    for scanner.Scan() {
+        if bytes.Contains(scanner.Bytes(), pat) {
+            patCount++
         }
-
     }
-    close(to)
-}
-
-func grepLine(pat string, from <-chan string, result chan<- bool) {
-    var wg sync.WaitGroup
-
-    for line := range from {
-        wg.Add(1)
-
-        go func(l string) {
-            defer wg.Done()
-            if strings.Contains(l, pat) {
-                result <- true
-            }
-        }(string(line))
+    if err := scanner.Err(); err != nil {
+        fmt.Fprintln(os.Stderr, err)
     }
-
-    wg.Wait()
-    close(result)
+    return patCount
 }
 
 func main() {
     file, pat := parse_args()
-    text_chan := make(chan string, 10)
-    result_chan := make(chan bool, 10)
-
-    go readFile(file, text_chan)
-    go grepLine(pat, text_chan, result_chan)
-
-    var total uint = 0
-    for r := range result_chan {
-        if r == true {
-            total += 1
-        }
-    }
-
+    total := grepFile(file, []byte(pat))
     fmt.Printf("Total %d\n", total)
 }
