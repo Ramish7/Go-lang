@@ -1,4 +1,6 @@
 // creating Linux command grep
+// searches for a string in a given file or line.
+// Muhammad Ramish Saeed
 
 package main
 
@@ -10,36 +12,38 @@ import (
     "os"
 )
 
-func parse_args() (file, pat string) {
+// resolving file and x as strings into component parts
+func parse_args() (file, x string) {
     if len(os.Args) < 3 {
-        log.Fatal("usage: petergrep <file_name> <pattern>")
+        log.Fatal("usage: grep <file_name> <pattern>") // prints the message when string is found and then exits
     }
     file = os.Args[1]
-    pat = os.Args[2]
+    x = os.Args[2]  
     return
 }
 
-func grepFile(file string, pat []byte) int64 {
-    patCount := int64(0)
+
+func grepFile(file string, x []byte) int64 {
+    xCount := int64(0)
     f, err := os.Open(file)
-    if err != nil {
+    if err != nil {   // if array is not nil then prints out err and exits
         log.Fatal(err)
     }
     defer f.Close()
     scanner := bufio.NewScanner(f)
     for scanner.Scan() {
-        if bytes.Contains(scanner.Bytes(), pat) {
-            patCount++
+        if bytes.Contains(scanner.Bytes(), x) {
+            xCount++  // increment xCount to when x is in the array bytes
         }
     }
     if err := scanner.Err(); err != nil {
         fmt.Fprintln(os.Stderr, err)
     }
-    return patCount
+    return xCount
 }
 
 func main() {
-    file, pat := parse_args()
-    total := grepFile(file, []byte(pat))
+    file, x := parse_args()
+    total := grepFile(file, []byte(x))
     fmt.Printf("Total %d\n", total)
 }
