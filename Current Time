@@ -1,0 +1,22 @@
+// This tells the current time of the UTC timezone
+
+package main                                                                                                                                                           
+
+import (
+    "fmt"
+    "time"
+)
+
+func main() {
+
+    current := time.Now() // current time
+
+    fmt.Println("original : ", current.String())
+
+    fmt.Println("mm-dd-yyyy : ", current.Format("01-02-2006"))
+    // mm-dd-yyyy :  09-02-2016
+
+    fmt.Println("yyyy-mm-dd : ", current.Format("2006-01-02"))
+    // yyyy-mm-dd :  2016-09-02
+
+}
