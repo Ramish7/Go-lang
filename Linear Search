@@ -1,0 +1,28 @@
+// This function performs a linear search through an array of integers and
+// prints out the number given in the specified index.
+
+package main
+
+import "fmt"
+
+func linearSearch(arrayOf []int, toSearch int) int {
+	for i, item := range arrayOf {
+		if item == toSearch {
+			return i
+		}
+	}
+	return -1   // false condition
+}
+
+func main() {
+	
+	fmt.Println("Linear search:")
+	arrayOf := []int{0, 2, 4, 6, 8, 10, 12, 14, 16, 18}
+	index := linearSearch(arrayOf, 16)
+	if index == -1 {
+		fmt.Println("Number not found")
+	} else {
+		fmt.Println("Index: ", index)
+		fmt.Println("arrayOf[", index, "] = ", arrayOf[index])
+	}
+}
