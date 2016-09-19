@@ -22,7 +22,7 @@ func parse_args() (file, x string) {
     return
 }
 
-
+// searches for file in [] byte array
 func grepFile(file string, x []byte) int64 {
     xCount := int64(0)
     f, err := os.Open(file)
@@ -32,7 +32,7 @@ func grepFile(file string, x []byte) int64 {
     defer f.Close()
     scanner := bufio.NewScanner(f)
     for scanner.Scan() {
-        if bytes.Contains(scanner.Bytes(), x) {
+        if bytes.Contains(scanner.Bytes(), x) {  // why put x here
             xCount++  // increment xCount to when x is in the array bytes
         }
     }
